@@ -49,6 +49,7 @@ redstone.setBundledOutput(bundleSide, 0)
 sleep(5)
 
 function main()
+  os.queueEvent("start")
   while true do
     local event, p1, p2, p3, p4 = os.pullEvent()
     local inventory = readInventory()
