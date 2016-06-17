@@ -9,9 +9,9 @@ seed2Feed       = colors.blue
 seed2Measure    = colors.pink
 seed3Feed       = colors.purple
 seed3Measure    = colors.lime
-potatoColor     = colors.brown
+potatoFeed      = colors.brown
 potatoMeasure   = colors.lightGray
-carrotColor     = colors.green
+carrotFeed      = colors.green
 carrotMeasure   = colors.cyan
 
 ingredients = {"seed", "potato", "carrot"}
@@ -196,11 +196,11 @@ function feedReactors(inventory, allReactorContents)
         end
       end
 
-      -- tryFeed("carrot", "carrot", carrotFeed)
-      -- tryFeed("potato", "potato", potatoFeed)
-      -- tryFeed("seed", "seed1", seed1Feed)
-      -- tryFeed("seed", "seed2", seed2Feed)
-      -- tryFeed("seed", "seed3", seed3Feed)
+      tryFeed("carrot", "carrot", carrotFeed)
+      tryFeed("potato", "potato", potatoFeed)
+      tryFeed("seed", "seed1", seed1Feed)
+      tryFeed("seed", "seed2", seed2Feed)
+      tryFeed("seed", "seed3", seed3Feed)
     end
   end
   status.feed = feed
