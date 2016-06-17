@@ -3,11 +3,11 @@ monitorSide     = "front"
 rednetSide      = "bottom"
 bundleSide      = "top"
 bioreactorSides = {"left", "back", "right"}
-seed1Actuator   = colors.red
+seed1Feed       = colors.red
 seed1Measure    = colors.gray
-seed2Actuator   = colors.blue
+seed2Feed       = colors.blue
 seed2Measure    = colors.pink
-seed3Actuator   = colors.purple
+seed3Feed       = colors.purple
 seed3Measure    = colors.lime
 potatoColor     = colors.brown
 potatoMeasure   = colors.lightGray
@@ -192,7 +192,6 @@ function feedReactors(inventory, allReactorContents)
       function tryFeed(ingredient, inventoryType, feedBit)
         if reactorContents.reactants[ingredient] == 0 and inventory[inventoryType] then
           status[side] = true
-          term.write(tostring(feed) .. ", " .. tostring(feedBit))
           feed = colors.combine(feed, feedBit)
         end
       end
