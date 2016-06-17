@@ -47,17 +47,21 @@ monitor.write("Disabling feeds")
 redstone.setBundledOutput(bundleSide, 0)
 
 function main()
+  monitor.clear()
   while true do
     local inventory = readInventory()
     local allReactorContents = readAllReactorContents()
-    updateDisplay(inventory, allReactorContents)
+    local feedStatus = feedReactors(allReactorContents)
+    local activationStatus = activateReactors(allReactorContents)
+    updateDisplay(inventory, allReactorContents, feedStatus, activationStatus)
     sleep(1)
   end
 end
 
 function readAllReactorContents()
-  local reactants = {}
+  local arc = {}
   for side,reactor in pairs(bioreactors) do
+    local fill = 0
     local q = {seed = 0, carrot = 0, potato = 0}
     local r = {seed = 0, carrot = 0, potato = 0}
     for slot = 1,reactor.getInventorySize() do
@@ -70,12 +74,13 @@ function readAllReactorContents()
         else
           t = q
         end
+        if item.qty > 0 then fill = fill + 1 end
         if item.qty == 64 then q[id] = q[id] + 1 end
       end
     end
-    reactants[side] = { queue = q, reactants = r }
+    arc[side] = { queue = q, reactants = r, fill = fill }
   end
-  return reactants
+  return arc
 end
 
 function readInventory()
@@ -89,10 +94,11 @@ function readInventory()
   return inventory
 end
 
-function updateDisplay(inventory, allReactorContents)
+function updateDisplay(inventory, allReactorContents, fillState, activationState)
   local y = 1
+  monitor.setTextColor(colors.white)
   monitor.setCursorPos(1,y); y = y + 1
-  monitor.setBackgroundColor(colors.gray)
+  monitor.setBackgroundColor(colors.lightGray)
   monitor.clearLine()
   monitor.write(hostname .. " (" .. tostring(os.getComputerID()) .. ")")
 
@@ -103,6 +109,7 @@ function updateDisplay(inventory, allReactorContents)
   end
 
   monitor.setCursorPos(1,y); y = y + 1
+  monitor.setBackgroundColor(colors.gray)
   monitor.clearLine()
   monitor.write("S " .. tern(inventory.seed1, "1")
                      .. tern(inventory.seed2, "2")
@@ -111,21 +118,61 @@ function updateDisplay(inventory, allReactorContents)
              .. "P " .. tern(inventory.potato, "1"))
 
   monitor.setCursorPos(1,y); y = y + 1
-  monitor.write("---------scpSCP")
+
+  monitor.setTextColor(colors.black)
 
   for side, reactorContents in pairs(allReactorContents) do
     monitor.setCursorPos(1,y)
+    monitor.setBackgroundColor(colors.black)
     monitor.clearLine()
-    monitor.write(side)
-    monitor.setCursorPos(9,y)
-    monitor.write(tostring(reactorContents.queue.seed)
-               .. tostring(reactorContents.queue.carrot)
-               .. tostring(reactorContents.queue.potato)
-               .. tostring(reactorContents.reactants.seed)
-               .. tostring(reactorContents.reactants.carrot)
-               .. tostring(reactorContents.reactants.potato))
+    monitor.write(string.sub(side,1,1))
+
+    if activationState[side] then
+      monitor.setBackgroundColor(colors.red)
+      monitor.setCursorPos(4,y)
+      monitor.write("A")
+    end
+
+    if fillState[side] then
+      monitor.setBackgroundColor(colors.blue)
+      monitor.setCursorPos(5,y)
+      monitor.write("F")
+    end
+
+    monitor.setCursorPos(7,y)
+    monitor.setBackgroundColor(colors.cyan)
+    monitor.write(reactorContents.fill)
+    monitor.setBackgroundColor(colors.brown)
+    monitor.setCursorPos(10,y)
+    monitor.write(tostring(reactorContents.queue.seed))
+    monitor.setCursorPos(13,y)
+    monitor.write(tostring(reactorContents.reactants.seed))
+    monitor.setBackgroundColor(colors.orange)
+    monitor.setCursorPos(10,y)
+    monitor.setCursorPos(11,y)
+    monitor.write(tostring(reactorContents.queue.carrot))
+    monitor.setCursorPos(14,y)
+    monitor.write(tostring(reactorContents.reactants.carrot))
+    monitor.setBackgroundColor(colors.yellow)
+    monitor.setCursorPos(12,y)
+    monitor.write(tostring(reactorContents.queue.potato))
+    monitor.setCursorPos(15,y)
+    monitor.write(tostring(reactorContents.reactants.potato))
     y = y + 1
   end
+end
+
+function feedReactors(allReactorContents)
+end
+
+function activateReactors(allReactorContents)
+  local status = {}
+  for side,reactorContents in pairs(allReactorContents) do
+    local newState = reactorContents.fill >= (9 + 3)
+    redstone.setOutput(side, newState)
+    status[side] = newState
+  end
+  return status
 end
 
 main()
