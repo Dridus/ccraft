@@ -49,12 +49,17 @@ redstone.setBundledOutput(bundleSide, 0)
 sleep(5)
 
 function main()
+  print("main!")
   os.queueEvent("start")
   while true do
+    print("waiting")
     local event, p1, p2, p3, p4 = os.pullEvent()
+    print("got " .. event)
     local inventory = readInventory()
     local reactants = readReactants()
+    print("updating display")
     updateDisplay(inventory, reactants)
+    print("sleeping")
     os.startTimer(1)
   end
 end
