@@ -211,7 +211,7 @@ end
 function activateReactors(allReactorContents)
   local status = {}
   for side,reactorContents in pairs(allReactorContents) do
-    local newState = reactorContents.fill >= 9
+    local newState = reactorContents.fill >= 12
     redstone.setOutput(side, not newState)
     status[side] = newState
   end
