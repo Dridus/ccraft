@@ -145,7 +145,7 @@ function updateDisplay(inventory, allReactorContents, feedState, activationState
 
     monitor.setCursorPos(7,y)
     monitor.setBackgroundColor(colors.cyan)
-    monitor.write(math.floor(reactorContents.fill))
+    monitor.write(tostring(reactorContents.fill))
     monitor.setBackgroundColor(colors.brown)
     monitor.setCursorPos(10,y)
     monitor.write(tostring(reactorContents.queue.seed))
