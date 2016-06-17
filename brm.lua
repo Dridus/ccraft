@@ -188,6 +188,8 @@ function feedReactors(inventory, allReactorContents)
   local feed = 0
   for side,reactorContents in pairs(allReactorContents) do
     if reactorContents.fill <= 12 then
+      status[side] = false
+
       function tryFeed(ingredient, inventoryType, feedBit)
         if reactorContents.reactants[ingredient] == 0 and inventory[inventoryType] then
           status[side] = true
@@ -200,6 +202,15 @@ function feedReactors(inventory, allReactorContents)
       tryFeed("seed", "seed1", seed1Feed)
       tryFeed("seed", "seed2", seed2Feed)
       tryFeed("seed", "seed3", seed3Feed)
+
+      if not status[side] then
+        if inventory.seed1 then feed = colors.combine(feed, seed1Feed) end
+        if inventory.seed2 then feed = colors.combine(feed, seed2Feed) end
+        if inventory.seed3 then feed = colors.combine(feed, seed3Feed) end
+        if inventory.carrot then feed = colors.combine(feed, carrotFeed) end
+        if inventory.potato then feed = colors.combine(feed, potatoFeed) end
+        status[side] = true
+      end
     end
   end
   status.feed = feed
