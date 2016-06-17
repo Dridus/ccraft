@@ -55,7 +55,7 @@ function main()
   while true do
     local inventory = readInventory()
     local allReactorContents = readAllReactorContents()
-    local feedStatus = feedReactors(allReactorContents)
+    local feedStatus = feedReactors(inventory, allReactorContents)
     local activationStatus = activateReactors(allReactorContents)
     updateDisplay(inventory, allReactorContents, feedStatus, activationStatus)
     sleep(1)
