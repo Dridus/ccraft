@@ -79,7 +79,7 @@ function readAllReactorContents()
           t = q
         end
         if item.qty > 0 then fill = fill + 1 end
-        if item.qty >= 32 then
+        if item.qty > 0 then
           if t[id] ~= nil then
             t[id] = t[id] + 1
           end
@@ -100,6 +100,52 @@ function readInventory()
   inventory.carrot = colors.test(signal, carrotMeasure)
   inventory.potato = colors.test(signal, potatoMeasure)
   return inventory
+end
+
+function feedReactors(inventory, allReactorContents)
+  local status = {}
+  local feed = 0
+  for side,reactorContents in pairs(allReactorContents) do
+    if reactorContents.fill <= 12 then
+      status[side] = false
+
+      function tryFeed(ingredient, inventoryType, feedBit)
+        if reactorContents.reactants[ingredient] == 0 and inventory[inventoryType] then
+          status[side] = true
+          feed = colors.combine(feed, feedBit)
+        end
+      end
+
+      tryFeed("carrot", "carrot", carrotFeed)
+      tryFeed("potato", "potato", potatoFeed)
+      tryFeed("seed", "seed1", seed1Feed)
+      tryFeed("seed", "seed2", seed2Feed)
+      tryFeed("seed", "seed3", seed3Feed)
+
+      if not status[side] then
+        if inventory.seed1 then feed = colors.combine(feed, seed1Feed) end
+        if inventory.seed2 then feed = colors.combine(feed, seed2Feed) end
+        if inventory.seed3 then feed = colors.combine(feed, seed3Feed) end
+        if inventory.carrot then feed = colors.combine(feed, carrotFeed) end
+        if inventory.potato then feed = colors.combine(feed, potatoFeed) end
+        status[side] = true
+      end
+    end
+  end
+  status.feed = feed
+  redstone.setBundledOutput(bundleSide, feed)
+  return status
+end
+
+function activateReactors(allReactorContents)
+  local status = {}
+  for side,reactorContents in pairs(allReactorContents) do
+    local bestFill = 9 + reactorContents.reactants.seed + reactorContents.reactants.potato + reactorContents.reactants.carrot
+    local newState = reactorContents.fill >= 12
+    redstone.setOutput(side, not newState)
+    status[side] = newState
+  end
+  return status
 end
 
 function updateDisplay(inventory, allReactorContents, feedState, activationState)
@@ -183,50 +229,4 @@ function updateDisplay(inventory, allReactorContents, feedState, activationState
   end
 end
 
-function feedReactors(inventory, allReactorContents)
-  local status = {}
-  local feed = 0
-  for side,reactorContents in pairs(allReactorContents) do
-    if reactorContents.fill <= 12 then
-      status[side] = false
-
-      function tryFeed(ingredient, inventoryType, feedBit)
-        if reactorContents.reactants[ingredient] == 0 and inventory[inventoryType] then
-          status[side] = true
-          feed = colors.combine(feed, feedBit)
-        end
-      end
-
-      tryFeed("carrot", "carrot", carrotFeed)
-      tryFeed("potato", "potato", potatoFeed)
-      tryFeed("seed", "seed1", seed1Feed)
-      tryFeed("seed", "seed2", seed2Feed)
-      tryFeed("seed", "seed3", seed3Feed)
-
-      if not status[side] then
-        if inventory.seed1 then feed = colors.combine(feed, seed1Feed) end
-        if inventory.seed2 then feed = colors.combine(feed, seed2Feed) end
-        if inventory.seed3 then feed = colors.combine(feed, seed3Feed) end
-        if inventory.carrot then feed = colors.combine(feed, carrotFeed) end
-        if inventory.potato then feed = colors.combine(feed, potatoFeed) end
-        status[side] = true
-      end
-    end
-  end
-  status.feed = feed
-  redstone.setBundledOutput(bundleSide, feed)
-  return status
-end
-
-function activateReactors(allReactorContents)
-  local status = {}
-  for side,reactorContents in pairs(allReactorContents) do
-    local newState = reactorContents.fill >= 12
-    redstone.setOutput(side, not newState)
-    status[side] = newState
-  end
-  return status
-end
-
 main()
-
