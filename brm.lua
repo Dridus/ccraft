@@ -25,7 +25,8 @@ rednet.host("brm", hostname)
 monitor.write("Rednet open: " .. os.getComputerID() .. "\n")
 
 local bioreactors = {}
-for side in bioreactorSides do
+for i = 1,#bioreactorSides do
+  local side = bioreactorSides[i]
   local bioreactor = peripheral.wrap(side)
   if bioreactor == nil then
     monitor.write("Bioreactor " .. side .. " missing!\n")
@@ -76,7 +77,7 @@ function updateDisplay(inventory, reactants)
 
   monitor.write("---------------\n")
 
-  function tern(b) do
+  function tern (b)
     if b then return "|" else return " " end
   end
 
@@ -86,7 +87,4 @@ function updateDisplay(inventory, reactants)
              .. "C " .. tern(inventory.carrot) .. " "
              .. "P " .. tern(inventory.potato) .. "\n")
 end
-
-
-
 
