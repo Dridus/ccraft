@@ -119,13 +119,15 @@ function updateDisplay(inventory, allReactorContents, feedState, activationState
 
   monitor.setCursorPos(1,y); y = y + 1
 
-  monitor.setTextColor(colors.black)
 
   for side, reactorContents in pairs(allReactorContents) do
     monitor.setCursorPos(1,y)
     monitor.setBackgroundColor(colors.black)
     monitor.clearLine()
+    monitor.setTextColor(colors.white)
     monitor.write(string.sub(side,1,1))
+
+    monitor.setTextColor(colors.black)
 
     if activationState[side] then
       monitor.setBackgroundColor(colors.red)
@@ -170,7 +172,7 @@ function activateReactors(allReactorContents)
   local status = {}
   for side,reactorContents in pairs(allReactorContents) do
     local newState = reactorContents.fill >= (9 + 3)
-    redstone.setOutput(side, newState)
+    redstone.setOutput(side, not newState)
     status[side] = newState
   end
   return status
