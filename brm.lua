@@ -192,6 +192,7 @@ function feedReactors(inventory, allReactorContents)
       function tryFeed(ingredient, inventoryType, feedBit)
         if reactorContents.reactants[ingredient] == 0 and inventory[inventoryType] then
           status[side] = true
+          term.write(tostring(feed) .. ", " .. tostring(feedBit))
           feed = colors.combine(feed, feedBit)
         end
       end
