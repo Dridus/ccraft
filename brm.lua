@@ -25,7 +25,7 @@ rednet.host("brm", hostname)
 monitor.write("Rednet open: " .. os.getComputerID() .. "\n")
 
 local bioreactors = {}
-for side in  do
+for side in bioreactorSides do
   local bioreactor = peripheral.wrap(side)
   if bioreactor == nil then
     monitor.write("Bioreactor " .. side .. " missing!\n")
