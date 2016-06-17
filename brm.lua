@@ -16,6 +16,8 @@ carrotMeasure   = colors.cyan
 
 local monitor = peripheral.wrap(monitorSide)
 monitor.setTextScale(0.5)
+monitor.setBackgroundColor(colors.black)
+monitor.setTextColor(colors.white)
 monitor.clear()
 local y = 1
 monitor.setCursorPos(1,y); y = y + 1
@@ -143,7 +145,7 @@ function updateDisplay(inventory, allReactorContents, feedState, activationState
 
     monitor.setCursorPos(7,y)
     monitor.setBackgroundColor(colors.cyan)
-    monitor.write(reactorContents.fill)
+    monitor.write(math.floor(reactorContents.fill))
     monitor.setBackgroundColor(colors.brown)
     monitor.setCursorPos(10,y)
     monitor.write(tostring(reactorContents.queue.seed))
