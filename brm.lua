@@ -196,11 +196,11 @@ function feedReactors(inventory, allReactorContents)
         end
       end
 
-      tryFeed("carrot", "carrot", carrotFeed)
-      tryFeed("potato", "potato", potatoFeed)
-      tryFeed("seed", "seed1", seed1Feed)
-      tryFeed("seed", "seed2", seed2Feed)
-      tryFeed("seed", "seed3", seed3Feed)
+      -- tryFeed("carrot", "carrot", carrotFeed)
+      -- tryFeed("potato", "potato", potatoFeed)
+      -- tryFeed("seed", "seed1", seed1Feed)
+      -- tryFeed("seed", "seed2", seed2Feed)
+      -- tryFeed("seed", "seed3", seed3Feed)
     end
   end
   status.feed = feed
