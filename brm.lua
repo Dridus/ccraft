@@ -46,8 +46,6 @@ monitor.setCursorPos(1,y)
 monitor.write("Disabling feeds")
 redstone.setBundledOutput(bundleSide, 0)
 
-sleep(5)
-
 function main()
   while true do
     local inventory = readInventory()
