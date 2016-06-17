@@ -120,12 +120,12 @@ function updateDisplay(inventory, allReactorContents)
     monitor.clearLine()
     monitor.write(side)
     monitor.setCursorPos(9,y)
-    monitor.write(tostring(allReactorContents.queue.seed)
-               .. tostring(allReactorContents.queue.carrot)
-               .. tostring(allReactorContents.queue.potato)
-               .. tostring(allReactorContents.reactants.seed)
-               .. tostring(allReactorContents.reactants.carrot)
-               .. tostring(allReactorContents.reactants.potato))
+    monitor.write(tostring(reactorContents.queue.seed)
+               .. tostring(reactorContents.queue.carrot)
+               .. tostring(reactorContents.queue.potato)
+               .. tostring(reactorContents.reactants.seed)
+               .. tostring(reactorContents.reactants.carrot)
+               .. tostring(reactorContents.reactants.potato))
     y = y + 1
   end
 end
