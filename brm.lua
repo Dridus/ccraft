@@ -14,6 +14,8 @@ potatoMeasure   = colors.lightGray
 carrotColor     = colors.green
 carrotMeasure   = colors.cyan
 
+ingredients = {"seed", "potato", "carrot"}
+
 local monitor = peripheral.wrap(monitorSide)
 monitor.setTextScale(0.5)
 monitor.setBackgroundColor(colors.black)
@@ -77,7 +79,11 @@ function readAllReactorContents()
           t = q
         end
         if item.qty > 0 then fill = fill + 1 end
-        if item.qty == 64 then q[id] = q[id] + 1 end
+        if item.qty == 64 then
+          if q[id] ~= nil then
+            q[id] = q[id] + 1
+          end
+        end
       end
     end
     arc[side] = { queue = q, reactants = r, fill = fill }
@@ -113,14 +119,26 @@ function updateDisplay(inventory, allReactorContents, feedState, activationState
   monitor.setCursorPos(1,y); y = y + 1
   monitor.setBackgroundColor(colors.gray)
   monitor.clearLine()
-  monitor.write("S " .. tern(inventory.seed1, "1")
-                     .. tern(inventory.seed2, "2")
-                     .. tern(inventory.seed3, "3") .. " "
-             .. "C " .. tern(inventory.carrot, "1") .. " "
-             .. "P " .. tern(inventory.potato, "1"))
+  monitor.write("Seed Carr Pota")
+  monitor.setCursorPos(1,y); y = y + 1
+  monitor.clearLine()
+  monitor.setCursorPos(1,y)
+  if colors.test(feedState.feed, seed1Feed) then monitor.setBackgroundColor(colors.red) else monitor.setBackgroundColor(colors.black) end
+  monitor.write(tern(inventory.seed1, "1"))
+  monitor.setCursorPos(2,y)
+  if colors.test(feedState.feed, seed2Feed) then monitor.setBackgroundColor(colors.red) else monitor.setBackgroundColor(colors.black) end
+  monitor.write(tern(inventory.seed2, "2"))
+  monitor.setCursorPos(3,y)
+  if colors.test(feedState.feed, seed3Feed) then monitor.setBackgroundColor(colors.red) else monitor.setBackgroundColor(colors.black) end
+  monitor.write(tern(inventory.seed3, "3"))
+  monitor.setCursorPos(6,y)
+  if colors.test(feedState.feed, carrotFeed) then monitor.setBackgroundColor(colors.red) else monitor.setBackgroundColor(colors.black) end
+  monitor.write(tern(inventory.carrot, "1"))
+  monitor.setCursorPos(10,y)
+  if colors.test(feedState.feed, potatoFeed) then monitor.setBackgroundColor(colors.red) else monitor.setBackgroundColor(colors.black) end
+  monitor.write(tern(inventory.potato, "1"))
 
   monitor.setCursorPos(1,y); y = y + 1
-
 
   for side, reactorContents in pairs(allReactorContents) do
     monitor.setCursorPos(1,y)
@@ -166,14 +184,34 @@ function updateDisplay(inventory, allReactorContents, feedState, activationState
   end
 end
 
-function feedReactors(allReactorContents)
-  return {}
+function feedReactors(inventory, allReactorContents)
+  local status = {}
+  local feed = 0
+  for side,reactorContents in pairs(allReactorContents) do
+    if reactorContents.fill <= 9 then
+      function tryFeed(ingredient, inventoryType, feedBit)
+        if reactorContents.reactants[ingredient] == 0 and inventory[inventoryType] then
+          status[side] = true
+          feed = bit.bor(feed, feedBit)
+        end
+      end
+
+      tryFeed("carrot", "carrot", carrotFeed)
+      tryFeed("potato", "potato", potatoFeed)
+      tryFeed("seed", "seed1", seed1Feed)
+      tryFeed("seed", "seed2", seed2Feed)
+      tryFeed("seed", "seed3", seed3Feed)
+    end
+  end
+  status.feed = feed
+  redstone.setBundledOutput(bundleSide, feed)
+  return status
 end
 
 function activateReactors(allReactorContents)
   local status = {}
   for side,reactorContents in pairs(allReactorContents) do
-    local newState = reactorContents.fill >= (9 + 3)
+    local newState = reactorContents.fill >= 9
     redstone.setOutput(side, not newState)
     status[side] = newState
   end
