@@ -58,8 +58,8 @@ end
 function readAllReactorContents()
   local reactants = {}
   for side,reactor in pairs(bioreactors) do
-    local q = {}
-    local r = {}
+    local q = {seed = 0, carrot = 0, potato = 0}
+    local r = {seed = 0, carrot = 0, potato = 0}
     for slot = 1,reactor.getInventorySize() do
       local item = reactor.getStackInSlot(slot)
       if item ~= nil then
@@ -70,9 +70,7 @@ function readAllReactorContents()
         else
           t = q
         end
-        local prevQty = q[id]
-        if prevQty == nil then prevQty = 0 end
-        if item.qty == 64 then q[id] = prevQty + 1 end
+        if item.qty == 64 then q[id] = q[id] + 1 end
       end
     end
     reactants[side] = { queue = q, reactants = r }
