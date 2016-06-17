@@ -43,7 +43,7 @@ for side,reactor in pairs(bioreactors) do
   redstone.setOutput(side, true)
 end
 monitor.setCursorPos(1,y)
-monitor.write("Disabling item feeds")
+monitor.write("Disabling feeds")
 redstone.setBundledOutput(bundleSide, 0)
 
 sleep(5)
@@ -93,4 +93,6 @@ function updateDisplay(inventory, reactants)
              .. "C " .. tern(inventory.carrot) .. " "
              .. "P " .. tern(inventory.potato))
 end
+
+main()
 
