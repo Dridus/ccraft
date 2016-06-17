@@ -79,9 +79,9 @@ function readAllReactorContents()
           t = q
         end
         if item.qty > 0 then fill = fill + 1 end
-        if item.qty == 64 then
-          if q[id] ~= nil then
-            q[id] = q[id] + 1
+        if item.qty >= 32 then
+          if t[id] ~= nil then
+            t[id] = t[id] + 1
           end
         end
       end
@@ -120,9 +120,8 @@ function updateDisplay(inventory, allReactorContents, feedState, activationState
   monitor.setBackgroundColor(colors.gray)
   monitor.clearLine()
   monitor.write("Seed Carr Pota")
-  monitor.setCursorPos(1,y); y = y + 1
-  monitor.clearLine()
   monitor.setCursorPos(1,y)
+  monitor.clearLine()
   if colors.test(feedState.feed, seed1Feed) then monitor.setBackgroundColor(colors.red) else monitor.setBackgroundColor(colors.black) end
   monitor.write(tern(inventory.seed1, "1"))
   monitor.setCursorPos(2,y)
@@ -138,7 +137,7 @@ function updateDisplay(inventory, allReactorContents, feedState, activationState
   if colors.test(feedState.feed, potatoFeed) then monitor.setBackgroundColor(colors.red) else monitor.setBackgroundColor(colors.black) end
   monitor.write(tern(inventory.potato, "1"))
 
-  monitor.setCursorPos(1,y); y = y + 1
+  y = y + 1
 
   for side, reactorContents in pairs(allReactorContents) do
     monitor.setCursorPos(1,y)
