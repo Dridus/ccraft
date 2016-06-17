@@ -94,7 +94,7 @@ function readInventory()
   return inventory
 end
 
-function updateDisplay(inventory, allReactorContents, fillState, activationState)
+function updateDisplay(inventory, allReactorContents, feedState, activationState)
   local y = 1
   monitor.setTextColor(colors.white)
   monitor.setCursorPos(1,y); y = y + 1
@@ -133,7 +133,7 @@ function updateDisplay(inventory, allReactorContents, fillState, activationState
       monitor.write("A")
     end
 
-    if fillState[side] then
+    if feedState[side] then
       monitor.setBackgroundColor(colors.blue)
       monitor.setCursorPos(5,y)
       monitor.write("F")
@@ -163,6 +163,7 @@ function updateDisplay(inventory, allReactorContents, fillState, activationState
 end
 
 function feedReactors(allReactorContents)
+  return {}
 end
 
 function activateReactors(allReactorContents)
