@@ -133,7 +133,7 @@ function updateDisplay(inventory, allReactorContents, feedState, activationState
   monitor.setCursorPos(6,y)
   if colors.test(feedState.feed, carrotFeed) then monitor.setBackgroundColor(colors.red) else monitor.setBackgroundColor(colors.black) end
   monitor.write(tern(inventory.carrot, "1"))
-  monitor.setCursorPos(10,y)
+  monitor.setCursorPos(11,y)
   if colors.test(feedState.feed, potatoFeed) then monitor.setBackgroundColor(colors.red) else monitor.setBackgroundColor(colors.black) end
   monitor.write(tern(inventory.potato, "1"))
 
@@ -150,34 +150,34 @@ function updateDisplay(inventory, allReactorContents, feedState, activationState
 
     if activationState[side] then
       monitor.setBackgroundColor(colors.red)
-      monitor.setCursorPos(4,y)
+      monitor.setCursorPos(3,y)
       monitor.write("A")
     end
 
     if feedState[side] then
       monitor.setBackgroundColor(colors.blue)
-      monitor.setCursorPos(5,y)
+      monitor.setCursorPos(4,y)
       monitor.write("F")
     end
 
-    monitor.setCursorPos(7,y)
+    monitor.setCursorPos(6,y)
     monitor.setBackgroundColor(colors.cyan)
     monitor.write(tostring(reactorContents.fill))
     monitor.setBackgroundColor(colors.brown)
-    monitor.setCursorPos(10,y)
+    monitor.setCursorPos(9,y)
     monitor.write(tostring(reactorContents.queue.seed))
-    monitor.setCursorPos(13,y)
+    monitor.setCursorPos(12,y)
     monitor.write(tostring(reactorContents.reactants.seed))
     monitor.setBackgroundColor(colors.orange)
+    monitor.setCursorPos(9,y)
     monitor.setCursorPos(10,y)
-    monitor.setCursorPos(11,y)
     monitor.write(tostring(reactorContents.queue.carrot))
-    monitor.setCursorPos(14,y)
+    monitor.setCursorPos(13,y)
     monitor.write(tostring(reactorContents.reactants.carrot))
     monitor.setBackgroundColor(colors.yellow)
-    monitor.setCursorPos(12,y)
+    monitor.setCursorPos(11,y)
     monitor.write(tostring(reactorContents.queue.potato))
-    monitor.setCursorPos(15,y)
+    monitor.setCursorPos(14,y)
     monitor.write(tostring(reactorContents.reactants.potato))
     y = y + 1
   end
@@ -187,7 +187,7 @@ function feedReactors(inventory, allReactorContents)
   local status = {}
   local feed = 0
   for side,reactorContents in pairs(allReactorContents) do
-    if reactorContents.fill <= 9 then
+    if reactorContents.fill <= 12 then
       function tryFeed(ingredient, inventoryType, feedBit)
         if reactorContents.reactants[ingredient] == 0 and inventory[inventoryType] then
           status[side] = true
