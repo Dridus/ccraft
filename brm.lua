@@ -63,7 +63,7 @@ function readAllReactorContents()
     local q = {}
     local r = {}
     for slot = 1,reactor.getInventorySize() do
-      local item = reactor.getStackInSlot(queueSlot)
+      local item = reactor.getStackInSlot(slot)
       if item ~= nil then
         local id = string.gsub(item.id, "[^:]+:", "")
         local t = nil
