@@ -14,6 +14,8 @@ potatoMeasure   = colors.lightGray
 carrotFeed      = colors.green
 carrotMeasure   = colors.cyan
 
+allFeed = seed1Feed + seed2Feed + seed3Feed + carrotFeed + potatoFeed
+
 ingredients = {"seed", "potato", "carrot"}
 
 local monitor = peripheral.wrap(monitorSide)
@@ -48,7 +50,7 @@ for side,reactor in pairs(bioreactors) do
 end
 monitor.setCursorPos(1,y)
 monitor.write("Disabling feeds")
-redstone.setBundledOutput(bundleSide, 0)
+redstone.setBundledOutput(bundleSide, allFeed)
 
 function main()
   monitor.clear()
@@ -104,7 +106,7 @@ end
 
 function feedReactors(inventory, allReactorContents)
   local status = {}
-  local feed = 0
+  local feed = allFeed
   for side,reactorContents in pairs(allReactorContents) do
     if reactorContents.fill <= 12 then
       status[side] = false
@@ -112,7 +114,7 @@ function feedReactors(inventory, allReactorContents)
       function tryFeed(ingredient, inventoryType, feedBit)
         if reactorContents.reactants[ingredient] == 0 and inventory[inventoryType] then
           status[side] = true
-          feed = colors.combine(feed, feedBit)
+          feed = colors.subtract(feed, feedBit)
         end
       end
 
@@ -123,11 +125,11 @@ function feedReactors(inventory, allReactorContents)
       tryFeed("seed", "seed3", seed3Feed)
 
       if not status[side] then
-        if inventory.seed1 then feed = colors.combine(feed, seed1Feed) end
-        if inventory.seed2 then feed = colors.combine(feed, seed2Feed) end
-        if inventory.seed3 then feed = colors.combine(feed, seed3Feed) end
-        if inventory.carrot then feed = colors.combine(feed, carrotFeed) end
-        if inventory.potato then feed = colors.combine(feed, potatoFeed) end
+        if inventory.seed1  then feed = colors.subtract(feed, seed1Feed) end
+        if inventory.seed2  then feed = colors.subtract(feed, seed2Feed) end
+        if inventory.seed3  then feed = colors.subtract(feed, seed3Feed) end
+        if inventory.carrot then feed = colors.subtract(feed, carrotFeed) end
+        if inventory.potato then feed = colors.subtract(feed, potatoFeed) end
         status[side] = true
       end
     end
